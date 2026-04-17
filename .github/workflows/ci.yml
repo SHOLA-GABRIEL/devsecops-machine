@@ -14,12 +14,6 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --debug --only-verified
-          - name: Secret Scanner (TruffleHog)
-        uses: trufflesecurity/trufflehog-github-action@main
-        with:
-          base: "" # This tells it to scan from the very beginning
+          base: "" # Scan from the very first commit
           head: ${{ github.ref_name }}
-          extra_args: --only-verified # Optional: filters for real hits
+          extra_args: --debug --only-verified=false
