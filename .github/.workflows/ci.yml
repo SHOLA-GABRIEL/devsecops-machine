@@ -1,17 +1,19 @@
-name: DevSecOps-Pipeline
-on:
-  push:
-    branches: [ "main" ]
+name: DevSecOps-Machine-Scanner
+on: [push]
+
 jobs:
-  build:
+  security-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Node
-        uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          node-version: '20'
-      - name: Install Deps
-        run: npm install
-      - name: Build Check
-        run: echo "Pipeline connected successfully!"
+          fetch-depth: 0 # Scans the entire commit history
+
+      - name: Secret Scanner (TruffleHog)
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
